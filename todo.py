@@ -24,12 +24,15 @@ def next_id(todos):
     return max((t["id"] for t in todos), default=0) + 1
 
 
+PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
+
+
 def cmd_add(args):
     todos = load_todos()
-    task = {"id": next_id(todos), "title": args.title, "done": False}
+    task = {"id": next_id(todos), "title": args.title, "done": False, "priority": args.priority}
     todos.append(task)
     save_todos(todos)
-    print(f"[추가] #{task['id']} {task['title']}")
+    print(f"[추가] #{task['id']} [{task['priority']}] {task['title']}")
 
 
 def cmd_list(args):
@@ -41,9 +44,11 @@ def cmd_list(args):
     if not todos:
         print("할 일이 없습니다.")
         return
+    todos = sorted(todos, key=lambda t: PRIORITY_ORDER.get(t.get("priority", "medium"), 1))
     for t in todos:
         status = "x" if t["done"] else " "
-        print(f"  [{status}] #{t['id']} {t['title']}")
+        priority = t.get("priority", "medium")
+        print(f"  [{status}] #{t['id']} [{priority}] {t['title']}")
 
 
 def cmd_done(args):
@@ -73,6 +78,7 @@ def main():
 
     p_add = sub.add_parser("add", help="할 일 추가")
     p_add.add_argument("title", help="할 일 내용")
+    p_add.add_argument("--priority", choices=["high", "medium", "low"], default="medium", help="우선순위 (기본값: medium)")
     p_add.set_defaults(func=cmd_add)
 
     p_list = sub.add_parser("list", help="할 일 목록 보기")

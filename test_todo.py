@@ -23,49 +23,58 @@ class TodoTestCase(unittest.TestCase):
             self.data_file.unlink()
 
     def test_add(self):
-        todo.cmd_add(Namespace(title="테스트 항목"))
+        todo.cmd_add(Namespace(title="테스트 항목", priority="medium"))
         todos = todo.load_todos()
         self.assertEqual(len(todos), 1)
         self.assertEqual(todos[0]["title"], "테스트 항목")
         self.assertFalse(todos[0]["done"])
         self.assertEqual(todos[0]["id"], 1)
+        self.assertEqual(todos[0]["priority"], "medium")
 
     def test_add_multiple_ids(self):
-        todo.cmd_add(Namespace(title="첫 번째"))
-        todo.cmd_add(Namespace(title="두 번째"))
-        todo.cmd_add(Namespace(title="세 번째"))
+        todo.cmd_add(Namespace(title="첫 번째", priority="medium"))
+        todo.cmd_add(Namespace(title="두 번째", priority="medium"))
+        todo.cmd_add(Namespace(title="세 번째", priority="medium"))
         todos = todo.load_todos()
         self.assertEqual([t["id"] for t in todos], [1, 2, 3])
 
+    def test_priority_sort(self):
+        todo.cmd_add(Namespace(title="낮음", priority="low"))
+        todo.cmd_add(Namespace(title="높음", priority="high"))
+        todo.cmd_add(Namespace(title="중간", priority="medium"))
+        todos = todo.load_todos()
+        sorted_todos = sorted(todos, key=lambda t: todo.PRIORITY_ORDER.get(t.get("priority", "medium"), 1))
+        self.assertEqual([t["title"] for t in sorted_todos], ["높음", "중간", "낮음"])
+
     def test_done(self):
-        todo.cmd_add(Namespace(title="완료할 항목"))
+        todo.cmd_add(Namespace(title="완료할 항목", priority="medium"))
         todo.cmd_done(Namespace(id=1))
         todos = todo.load_todos()
         self.assertTrue(todos[0]["done"])
 
-    def test_done_invalid_id(self, ):
-        todo.cmd_add(Namespace(title="항목"))
+    def test_done_invalid_id(self):
+        todo.cmd_add(Namespace(title="항목", priority="medium"))
         todo.cmd_done(Namespace(id=999))
         todos = todo.load_todos()
         self.assertFalse(todos[0]["done"])
 
     def test_delete(self):
-        todo.cmd_add(Namespace(title="삭제할 항목"))
-        todo.cmd_add(Namespace(title="남길 항목"))
+        todo.cmd_add(Namespace(title="삭제할 항목", priority="medium"))
+        todo.cmd_add(Namespace(title="남길 항목", priority="medium"))
         todo.cmd_delete(Namespace(id=1))
         todos = todo.load_todos()
         self.assertEqual(len(todos), 1)
         self.assertEqual(todos[0]["title"], "남길 항목")
 
     def test_delete_invalid_id(self):
-        todo.cmd_add(Namespace(title="항목"))
+        todo.cmd_add(Namespace(title="항목", priority="medium"))
         todo.cmd_delete(Namespace(id=999))
         todos = todo.load_todos()
         self.assertEqual(len(todos), 1)
 
     def test_filter_done(self):
-        todo.cmd_add(Namespace(title="미완료"))
-        todo.cmd_add(Namespace(title="완료"))
+        todo.cmd_add(Namespace(title="미완료", priority="medium"))
+        todo.cmd_add(Namespace(title="완료", priority="medium"))
         todo.cmd_done(Namespace(id=2))
         todos = todo.load_todos()
         done = [t for t in todos if t["done"]]
