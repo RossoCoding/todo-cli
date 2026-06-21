@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Set-Location \"D:\\\\AI_project\\\\TEST1\"; python todo.py add \"Claude Code 익히기\" 2>&1; echo \"exit: $LASTEXITCODE\")",
+      "Bash(python todo.py add \"Claude Code 익히기\")",
+      "Bash(python todo.py add \"Python 프로젝트 완성\")",
+      "Bash(python todo.py add \"README 작성\")",
+      "Bash(python todo.py list)",
+      "PowerShell(\\(Get-Command python -ErrorAction SilentlyContinue\\).Source; \\(Get-Command py -ErrorAction SilentlyContinue\\).Source; \\(Get-Command python3 -ErrorAction SilentlyContinue\\).Source)",
+      "PowerShell(Set-Location \"D:\\\\AI_project\\\\TEST1\"; [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $env:PYTHONIOENCODING = \"utf-8\"; & \"C:\\\\WINDOWS\\\\py.exe\" todo.py add \"Python 프로젝트 완성\" | Out-Host; & \"C:\\\\WINDOWS\\\\py.exe\" todo.py add \"README 작성\" | Out-Host; & \"C:\\\\WINDOWS\\\\py.exe\" todo.py list | Out-Host)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(Set-Location \"D:\\\\AI_project\\\\TEST1\"; [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $env:PYTHONIOENCODING = \"utf-8\"; Write-Host \"--- 전체 목록 ---\"; & \"C:\\\\WINDOWS\\\\py.exe\" todo.py list | Out-Host; Write-Host \"--- 미완료만 ---\"; & \"C:\\\\WINDOWS\\\\py.exe\" todo.py list --filter undone | Out-Host; Write-Host \"--- 완료만 ---\"; & \"C:\\\\WINDOWS\\\\py.exe\" todo.py list --filter done | Out-Host)",
+      "PowerShell(Set-Location \"D:\\\\AI_project\\\\TEST1\"; [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $env:PYTHONIOENCODING = \"utf-8\"; & \"C:\\\\WINDOWS\\\\py.exe\" todo.py add \"장보기\" | Out-Host)",
+      "PowerShell(\\(Get-Command gh -ErrorAction SilentlyContinue\\).Source)",
+      "PowerShell(git *)",
+      "PowerShell(gh auth *)"
+    ]
+  }
+}
